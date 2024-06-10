@@ -1,0 +1,5 @@
+*.csv
+*.txt
+*.tsv
+*__pycache__/
+*studying_flask/
