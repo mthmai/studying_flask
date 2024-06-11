@@ -19,7 +19,6 @@ class Teams(BaseModel):
     conference = CharField(max_length=8)
 
 class Temporada(BaseModel):
-    #temp_id = AutoField()
     team = ForeignKeyField(Teams, field=Teams.team, on_delete= 'CASCADE')
     conference = ForeignKeyField(Teams, field=Teams.conference, on_delete= 'CASCADE')
     games_played = IntegerField()
