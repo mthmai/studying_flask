@@ -83,5 +83,6 @@ if __name__ == '__main__':
     df = IReader(
             strategies=[ReaderCsv, ReaderTsv, ReaderExcel]
         ).action_function(value=file_path)
-    
+    #df_sla = df[df['TEAM'] == 'North Carolina']
+    #print(df_sla[['TEAM', 'SEED', 'WAB', 'ADJ_T', 'FTR', 'TOR', 'CONF', 'G', 'ADJOE', 'ADJDE', 'BARTHAG', 'EFG_O', 'EFG_D', 'YEAR']])
     print(df)
