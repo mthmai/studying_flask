@@ -10,61 +10,11 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
 
 # Third imports
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, render_template
 
 # Projects imports
 from data.create_database import Teams, Temporada, Staats
 
-#app = Flask(__name__)
-
-"""
-class Routes:
-    def __init__(self):
-        self._app = None  # Defina _app como None inicialmente
-
-    @property
-    def app(self):
-        if self._app is None:
-            self._app = Flask(__name__)
-        return self._app
-
-    def define_routes(self):
-        raise NotImplementedError("Método define_routes deve ser implementado nas subclasses")
-
-class RoutesTeams(Routes):
-    
-    def define_routes(self):
-        @self.app.route('/teams', methods=['GET'])
-        def get_all_teams():
-            query = Teams.select(Teams.team, Teams.conference).dicts()
-            list_dict = list(query)
-            return make_response(jsonify(list_dict))
-        
-        @self.app.route('/teams/<team>', methods=['GET'])
-        def get_unique_team(team: str):
-            query = Teams.select(Teams.team, 
-                                 Teams.conference).where(Teams.team == team).dicts()
-            
-            for value in query:
-                result = value
-
-            return jsonify(result)
-        
-
-class RoutesTemporada(Routes):
-
-    def define_routes(self):
-        @self.app.route('/temporada', methods=['GET'])
-        def get_all_temporada():
-            query = Temporada.select(Temporada.team, 
-                                     Temporada.conference,
-                                     Temporada.games_played,
-                                     Temporada.games_win,
-                                     Temporada.year
-                                     ).dicts()
-            list_dict = list(query)
-            return make_response(jsonify(list_dict))
-"""
 class Routes(ABC):
     def __init__(self):
         self._app = None  # Inicializa _app como None
@@ -83,6 +33,24 @@ class Routes(ABC):
     @abstractmethod
     def action(self):
         pass
+
+# Classe para as rotas de times
+class RoutesHomepage(Routes):
+    def validator(self) -> bool:
+        try:
+            @self.app.route('/', methods=['GET'])
+            def get_homepage():
+                print("Rota / chamada")
+                #query = Teams.select(Teams.team, Teams.conference).dicts()
+                self.return_query = render_template("index.html")
+                return self.return_query
+            return True
+        except Exception as e:
+            print(f"Exception in RoutesHomepage: {e}")
+            return False
+
+    def action(self):
+        return self.app
 
 # Classe para as rotas de times
 class RoutesTeams(Routes):
@@ -211,7 +179,7 @@ if __name__ == '__main__':
     #routes_teams.define_routes()  # Chama o método para definir as rotas
     #routes_temporada.define_routes()
     app_instance = IRoutes(
-        strategies=[RoutesTeams, RoutesTemporada, RoutesStaats]
+        strategies=[RoutesHomepage, RoutesTeams, RoutesTemporada, RoutesStaats]
     ).action_function()
     
     if app_instance:
